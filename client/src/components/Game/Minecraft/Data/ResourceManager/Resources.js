@@ -54,6 +54,11 @@ export default {
         top: require('../../../../../assets/blocks/water_flow.png'),
         bottom: require('../../../../../assets/blocks/water_flow.png')
       },
+      9: {
+        side: require('../../../../../assets/blocks/water_still.png'),
+        top: require('../../../../../assets/blocks/water_still.png'),
+        bottom: require('../../../../../assets/blocks/water_still.png')
+      },
       12: {
         side: require('../../../../../assets/blocks/sand.png'),
         top: require('../../../../../assets/blocks/sand.png'),
@@ -88,6 +93,11 @@ export default {
         side: require('../../../../../assets/blocks/cactus_side.png'),
         top: require('../../../../../assets/blocks/cactus_top.png'),
         bottom: require('../../../../../assets/blocks/cactus_bottom.png')
+      },
+      95: {
+        side: require('../../../../../assets/blocks/blue_stained_glass.png'),
+        top: require('../../../../../assets/blocks/blue_stained_glass.png'),
+        bottom: require('../../../../../assets/blocks/blue_stained_glass.png')
       }
     },
     specialBlocks: {

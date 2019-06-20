@@ -85,7 +85,8 @@ class World {
       this.workerPool.queueJob({
         cmd: 'GET_HIGHEST',
         x: 0,
-        z: 0
+        z: 0,
+        changedBlocks
       })
     }
   }
@@ -114,7 +115,7 @@ class World {
 
           this.player.setPosition(
             position.x + DIMENSION / 2,
-            (h + P_I_2_TOE + P_I_2_TOP) * DIMENSION,
+            (h + P_I_2_TOE + P_I_2_TOP + 1) * DIMENSION,
             position.z + DIMENSION / 2
           )
           break

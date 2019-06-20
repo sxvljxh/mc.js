@@ -17,9 +17,12 @@ export default () => {
         postMessage({ cmd })
         break
       case 'GET_HIGHEST': {
-        const { x, z } = e.data
+        const { x, z, changedBlocks } = e.data
 
-        postMessage({ cmd, h: self.generator.getHighestBlock(x, z) })
+        postMessage({
+          cmd,
+          h: self.generator.getHighestBlock(x, z, changedBlocks)
+        })
 
         break
       }

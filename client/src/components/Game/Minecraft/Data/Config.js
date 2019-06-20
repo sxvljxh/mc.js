@@ -164,7 +164,7 @@ export default {
     dimension: 16
   },
   chunk: {
-    size: 8,
+    size: 12,
     height: 50
   },
   world: {
