@@ -58,38 +58,24 @@ class MainScene extends Component {
         clearTimeout(requestID)
       }) //fall back
 
-    // requestAnimationFrame() shim by Paul Irish
-    window.requestAnimFrame = (function() {
-      return (
-        window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        function(/* function */ callback, /* DOMElement */ element) {
-          window.setTimeout(callback, 1000 / 60)
-        }
-      )
-    })()
-
     /**
      * Behaves the same as setInterval except uses requestAnimationFrame() where possible for better performance
      * @param {function} fn The callback function
      * @param {int} delay The delay in milliseconds
      */
     window.requestInterval = function(fn, delay) {
-      var start = new Date().getTime(),
+      var start = performance.now(),
         handle = {}
       function loop() {
-        handle.value = window.requestAnimFrame(loop)
-        var current = new Date().getTime(),
+        handle.value = window.requestAnimationFrame(loop)
+        var current = performance.now(),
           delta = current - start
         if (delta >= delay) {
           fn.call()
-          start = new Date().getTime()
+          start = performance.now()
         }
       }
-      handle.value = window.requestAnimFrame(loop)
+      handle.value = window.requestAnimationFrame(loop)
       return handle
     }
 
@@ -134,19 +120,19 @@ class MainScene extends Component {
       )
         return window.setTimeout(fn, delay)
 
-      var start = new Date().getTime(),
+      var start = performance.now(),
         handle = {}
 
       function loop() {
-        var current = new Date().getTime(),
+        var current = performance.now(),
           delta = current - start
 
         delta >= delay
           ? fn.call()
-          : (handle.value = window.requestAnimFrame(loop))
+          : (handle.value = window.requestAnimationFrame(loop))
       }
 
-      handle.value = window.requestAnimFrame(loop)
+      handle.value = window.requestAnimationFrame(loop)
       return handle
     }
 

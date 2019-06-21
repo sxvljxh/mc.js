@@ -395,7 +395,7 @@ class Controls extends Stateful {
 
     let delta = (now - this.prevTime) / 1000
 
-    if (delta > 0.5) delta = 0.01
+    if (delta > 0.15) delta = 0.01
 
     this._calculateAccelerations()
 
@@ -420,10 +420,15 @@ class Controls extends Stateful {
           (isSprinting ? SPRINT_FACTOR : 1)) *
       delta
 
+    this.acc.multiplyScalar(delta)
     this.vel.add(this.acc)
     this.acc.set(0.0, 0.0, 0.0)
 
-    // APPLY GRAVITY
+    // APPLY GRAVITY & JUMP
+    if (this.needsToJump) {
+      this.vel.y += JUMP_ACC
+      this.needsToJump = false
+    }
     if (shouldGravity && !this.freshlyJumped) this.vel.y += GRAVITY
 
     if (this.vel.x > HORZ_MAX_SPEED) this.vel.x = HORZ_MAX_SPEED
@@ -449,7 +454,7 @@ class Controls extends Stateful {
       if (this.status.isFlying) this.acc.y += VERITCAL_ACC
       else if (this.status.canJump) {
         // SURVIVAL MODE
-        this.acc.y += JUMP_ACC
+        this.needsToJump = true
         this.freshlyJumped = true
         this.status.registerJump()
       }
