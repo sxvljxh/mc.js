@@ -13,6 +13,7 @@ export default () => {
         self.config = config
 
         self.generator = new Generator(config.seed, config.size)
+        self.generator.registerCB(config.changedBlocks)
 
         postMessage({ cmd })
         break
@@ -21,14 +22,13 @@ export default () => {
 
         postMessage({
           cmd,
-          h: self.generator.getHighestBlock(x, z, changedBlocks)
+          h: self.generator.getHighestBlock(x, z)
         })
 
         break
       }
       case 'GET_CHUNK': {
         const {
-          changedBlocks,
           chunkName,
           coords: { coordx, coordy, coordz }
         } = e.data
@@ -41,7 +41,7 @@ export default () => {
         const get = (i, j, k) =>
           blocks[i * stride[0] + j * stride[1] + k * stride[2]]
 
-        self.generator.setVoxelData(set, coordx, coordy, coordz, changedBlocks)
+        self.generator.setVoxelData(set, coordx, coordy, coordz)
         /** MESHING RIGHT BELOW */
         const dims = [size + 2, size + 2, size + 2]
 

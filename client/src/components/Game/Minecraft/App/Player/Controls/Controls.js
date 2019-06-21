@@ -111,10 +111,10 @@ class Controls extends Stateful {
 
   stopBreakingBlock = () => {
     if (this.breakBlockCountdown) {
-      clearInterval(this.breakBlockCountdown)
-      this.breakBlockCountdown = undefined
+      window.clearRequestInterval(this.breakBlockCountdown)
       this.viewport.removeBBFromScene()
     }
+    this.breakBlockCountdown = undefined
   }
 
   addDebugControl = debug => (this.debug = debug)
@@ -157,8 +157,9 @@ class Controls extends Stateful {
             this.world.breakBlock(false)
 
             this.canBreakBlock = false
-            setTimeout(() => {
+            const canBreakBlockTimeout = window.requestTimeout(() => {
               this.canBreakBlock = true
+              window.clearRequestTimeout(canBreakBlockTimeout)
             }, 200)
           } else if (this.status.isSurvival && !this.breakBlockCountdown)
             this._startBreakingBlock()
@@ -177,8 +178,9 @@ class Controls extends Stateful {
           else if (this.status.isSurvival) this.world.placeBlock(type)
 
           this.canPlaceBlock = false
-          setTimeout(() => {
+          const canPlaceBlockTimeout = window.requestTimeout(() => {
             this.canPlaceBlock = true
+            window.clearRequestTimeout(canPlaceBlockTimeout)
           }, 200)
 
           break
@@ -218,17 +220,15 @@ class Controls extends Stateful {
 
     this.viewport.addBB2Scene()
 
-    let counter = 10
+    let counter = 9
 
-    this.breakBlockCountdown = setInterval(() => {
+    this.breakBlockCountdown = window.requestInterval(() => {
       counter--
       if (counter === 0) {
         this.world.breakBlock()
         this.stopBreakingBlock()
         return
-      }
-
-      this.viewport.incrementBBStage()
+      } else this.viewport.incrementBBStage()
 
       // CHANGE TEXTURE
     }, interval)

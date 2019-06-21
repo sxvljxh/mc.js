@@ -63,10 +63,10 @@ class Keyboard {
           keyState.dblPressedPotential = true
 
           // Double press will not work after x seconds.
-          window.setTimeout(
-            () => (keyState.dblPressedPotential = undefined),
-            Config.keyboard.dblTimeout
-          )
+          const dblPressTimeout = window.requestTimeout(() => {
+            keyScope.dblPressedPotential = undefined
+            window.clearRequestInterval(dblPressTimeout)
+          }, Config.keyboard.dblTimeout)
         }
 
         if (keyState.onReleased) keyState.onReleased(e)

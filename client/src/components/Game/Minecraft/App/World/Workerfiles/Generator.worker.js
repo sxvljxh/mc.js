@@ -54,8 +54,6 @@ export default () => {
       this.temp = new Noise(this.seed / 2)
     }
 
-    const registerCB = changedBlocks => (this.changedBlocks = changedBlocks)
-
     const getNoise = (x, y, z) => this.octavePerlin3(x, y, z) - (y * 4) / scale
 
     const isSolidAt = (x, y, z) =>
@@ -128,10 +126,11 @@ export default () => {
       return (total / maxVal) * amplifier + heightOffset
     }
 
-    this.setVoxelData = (set, coordx, coordy, coordz, changedBlocks) => {
-      const offsets = [coordx * size - 1, coordy * size - 1, coordz * size - 1]
+    this.registerCB = (changedBlocks = {}) =>
+      (this.changedBlocks = changedBlocks)
 
-      registerCB(changedBlocks)
+    this.setVoxelData = (set, coordx, coordy, coordz) => {
+      const offsets = [coordx * size - 1, coordy * size - 1, coordz * size - 1]
 
       for (let x = offsets[0]; x < offsets[0] + size + 2; x++) {
         for (let z = offsets[2]; z < offsets[2] + size + 2; z++) {
@@ -139,7 +138,7 @@ export default () => {
           for (let y = offsets[1]; y < offsets[1] + size + 2; y++) {
             let blockId
 
-            const cb = changedBlocks[getCoordsRepresentation(x, y, z)]
+            const cb = this.changedBlocks[getCoordsRepresentation(x, y, z)]
 
             if (typeof cb === 'number') {
               set(x - offsets[0], z - offsets[2], y - offsets[1], cb)

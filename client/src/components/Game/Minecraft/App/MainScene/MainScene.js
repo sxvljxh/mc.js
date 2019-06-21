@@ -58,6 +58,120 @@ class MainScene extends Component {
         clearTimeout(requestID)
       }) //fall back
 
+    // requestAnimationFrame() shim by Paul Irish
+    window.requestAnimFrame = (function() {
+      return (
+        window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(/* function */ callback, /* DOMElement */ element) {
+          window.setTimeout(callback, 1000 / 60)
+        }
+      )
+    })()
+
+    /**
+     * Behaves the same as setInterval except uses requestAnimationFrame() where possible for better performance
+     * @param {function} fn The callback function
+     * @param {int} delay The delay in milliseconds
+     */
+    window.requestInterval = function(fn, delay) {
+      var start = new Date().getTime(),
+        handle = {}
+      function loop() {
+        handle.value = window.requestAnimFrame(loop)
+        var current = new Date().getTime(),
+          delta = current - start
+        if (delta >= delay) {
+          fn.call()
+          start = new Date().getTime()
+        }
+      }
+      handle.value = window.requestAnimFrame(loop)
+      return handle
+    }
+
+    /**
+     * Behaves the same as clearInterval except uses cancelRequestAnimationFrame() where possible for better performance
+     * @param {int|object} fn The callback function
+     */
+    window.clearRequestInterval = function(handle) {
+      window.cancelAnimationFrame
+        ? window.cancelAnimationFrame(handle.value)
+        : window.webkitCancelAnimationFrame
+        ? window.webkitCancelAnimationFrame(handle.value)
+        : window.webkitCancelRequestAnimationFrame
+        ? window.webkitCancelRequestAnimationFrame(
+            handle.value
+          ) /* Support for legacy API */
+        : window.mozCancelRequestAnimationFrame
+        ? window.mozCancelRequestAnimationFrame(handle.value)
+        : window.oCancelRequestAnimationFrame
+        ? window.oCancelRequestAnimationFrame(handle.value)
+        : window.msCancelRequestAnimationFrame
+        ? window.msCancelRequestAnimationFrame(handle.value)
+        : clearInterval(handle)
+    }
+
+    /**
+     * Behaves the same as setTimeout except uses requestAnimationFrame() where possible for better performance
+     * @param {function} fn The callback function
+     * @param {int} delay The delay in milliseconds
+     */
+
+    window.requestTimeout = function(fn, delay) {
+      if (
+        !window.requestAnimationFrame &&
+        !window.webkitRequestAnimationFrame &&
+        !(
+          window.mozRequestAnimationFrame &&
+          window.mozCancelRequestAnimationFrame
+        ) && // Firefox 5 ships without cancel support
+        !window.oRequestAnimationFrame &&
+        !window.msRequestAnimationFrame
+      )
+        return window.setTimeout(fn, delay)
+
+      var start = new Date().getTime(),
+        handle = {}
+
+      function loop() {
+        var current = new Date().getTime(),
+          delta = current - start
+
+        delta >= delay
+          ? fn.call()
+          : (handle.value = window.requestAnimFrame(loop))
+      }
+
+      handle.value = window.requestAnimFrame(loop)
+      return handle
+    }
+
+    /**
+     * Behaves the same as clearTimeout except uses cancelRequestAnimationFrame() where possible for better performance
+     * @param {int|object} fn The callback function
+     */
+    window.clearRequestTimeout = function(handle) {
+      window.cancelAnimationFrame
+        ? window.cancelAnimationFrame(handle.value)
+        : window.webkitCancelAnimationFrame
+        ? window.webkitCancelAnimationFrame(handle.value)
+        : window.webkitCancelRequestAnimationFrame
+        ? window.webkitCancelRequestAnimationFrame(
+            handle.value
+          ) /* Support for legacy API */
+        : window.mozCancelRequestAnimationFrame
+        ? window.mozCancelRequestAnimationFrame(handle.value)
+        : window.oCancelRequestAnimationFrame
+        ? window.oCancelRequestAnimationFrame(handle.value)
+        : window.msCancelRequestAnimationFrame
+        ? window.msCancelRequestAnimationFrame(handle.value)
+        : clearTimeout(handle)
+    }
+
     // Player setup
     this.currentPlayer = this.worldData.players.find(
       ele => ele.user.username === this.props.username
@@ -130,7 +244,7 @@ class MainScene extends Component {
     this.init()
 
     /** Called every 200ms to update player position with server. */
-    this.updatePosCall = setInterval(() => {
+    this.updatePosCall = window.requestInterval(() => {
       const playerCoords = this.player.getCoordinates(),
         playerDirs = this.player.getDirections()
 
@@ -156,7 +270,7 @@ class MainScene extends Component {
       }
     }, 200)
 
-    this.updateWorldCall = setInterval(() => this.updateWorld(), 300)
+    // this.updateWorldCall = window.requestInterval(() => , 50)
   }
 
   componentDidMount() {
@@ -177,12 +291,13 @@ class MainScene extends Component {
 
   terminate = () => {
     window.cancelAnimationFrame(this.frameId)
-    clearInterval(this.updatePosCall)
-    clearInterval(this.updateWorldCall)
+    window.clearRequestInterval(this.updatePosCall)
+    // window.clearRequestInterval(this.updateWorldCall)
   }
 
   animate = () => {
     this.update()
+    this.updateWorld()
     this.debug.update()
 
     this.renderScene()
