@@ -8,13 +8,24 @@ export default () => {
     const {
       maxWorldHeight = 256,
       waterLevel = 62,
-      scale = 2,
-      octaves = 10,
-      persistance = 1,
-      lacunarity = 1,
+      scale = 1,
+      octaves = 2,
+      persistance = 0.5,
+      lacunarity = 2,
       heightOffset = 2.5,
-      amplifier = 1
+      amplifier = 3
     } = {}
+
+    // const {
+    //   maxWorldHeight = 256,
+    //   waterLevel = 62,
+    //   scale = 2,
+    //   octaves = 10,
+    //   persistance = 1,
+    //   lacunarity = 1,
+    //   heightOffset = 2.5,
+    //   amplifier = 1
+    // } = {}
 
     // SOME GOOD CONFIGS
     // const {

@@ -14,6 +14,7 @@ const SIZE = Config.chunk.size,
   P_I_2_TOE = Config.player.aabb.eye2toe,
   P_I_2_TOP = Config.player.aabb.eye2top,
   DIMENSION = Config.block.dimension,
+  LIGHT_RADIUS = Config.lightRadius,
   WORLD_GENERATION_CONFIG = Config.world.worldConfigs
 
 class World {
@@ -52,6 +53,7 @@ class World {
     this.workerPool = new WorkerPool(Workerfiles, this, {
       seed,
       size: SIZE,
+      lightRadius: LIGHT_RADIUS,
       stride: [(SIZE + 2) ** 2, SIZE + 2, 1],
       generation: WORLD_GENERATION_CONFIG,
       changedBlocks: this.changedBlocks

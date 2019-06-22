@@ -18,7 +18,7 @@ export default () => {
         postMessage({ cmd })
         break
       case 'GET_HIGHEST': {
-        const { x, z, changedBlocks } = e.data
+        const { x, z } = e.data
 
         postMessage({
           cmd,
