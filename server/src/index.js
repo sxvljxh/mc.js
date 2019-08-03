@@ -26,7 +26,7 @@ const opts = {
   port: 4000,
   cors: {
     credentials: true,
-    origin: ['http://localhost:80', 'http://localhost:3000']
+    origin: ['http://localhost', 'http://localhost:80', 'http://localhost:3000']
   }
 }
 

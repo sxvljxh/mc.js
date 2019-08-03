@@ -11,7 +11,7 @@ const watchers = {}
 
 const log = output => debug('socket')(output)
 
-app.listen(5000, () => {
+app.listen(5000, '0.0.0.0', () => {
   log('running on port 5000.')
 })
 
