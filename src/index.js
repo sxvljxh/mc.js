@@ -19,7 +19,7 @@ import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks'
 dotenv.config()
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000',
+  uri: 'http://127.0.0.1:4000',
   credentials: 'same-origin'
 })
 
@@ -29,7 +29,7 @@ const link = split(
     return kind === 'OperationDefinition' && operation === 'subscription'
   },
   new WebSocketLink({
-    uri: 'ws://localhost:4000',
+    uri: 'ws://127.0.0.1:4000',
     options: {
       reconnect: true
     }
