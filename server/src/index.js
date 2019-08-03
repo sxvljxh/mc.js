@@ -2,6 +2,7 @@ import { resolvers } from './resolvers'
 import { socketIO, prisma } from './lib/server'
 
 import debug from 'debug'
+import session from 'express-session'
 import { GraphQLServer, PubSub } from 'graphql-yoga'
 
 const log = output => debug('server')(output)
@@ -21,7 +22,31 @@ const server = new GraphQLServer({
   }
 })
 
-server.start({ port: process.env.PORT | 4000 }, ({ port }) => {
+const opts = {
+  port: 4000,
+  cors: {
+    credentials: true,
+    origin: ['http://localhost:80', 'http://localhost:3000']
+  }
+}
+
+const SESSION_SECRET = 'alskjdhflkajshflkashjfdl'
+
+server.express.use(
+  session({
+    name: 'qid',
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
+    }
+  })
+)
+
+server.start(opts, ({ port }) => {
   // eslint-disable-next-line no-console
   log(`The server is up and running on port ${port}.`)
 })
