@@ -122,7 +122,7 @@ const Config = {
       posZ: 5.53
     },
     render: {
-      horzD: 1,
+      horzD: 2,
       vertD: 1
     },
     reachDst: 7,
@@ -190,4 +190,4 @@ const Config = {
   }
 }
 
-export default Config
+module.exports = Config
