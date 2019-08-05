@@ -1,10 +1,12 @@
 import { resolvers } from './resolvers'
-import { prisma, socketIO } from './modules/server'
+import { prisma, socketIO, redisClient } from './modules/server'
 import Helpers from './utils/helpers'
+import ChunkDistributor from './lib/game/chunkDistributor'
 
 import { GraphQLServer, PubSub } from 'graphql-yoga'
 
 const pubsub = new PubSub()
+const chunkDistro = new ChunkDistributor()
 
 const server = new GraphQLServer({
   typeDefs: 'server/src/schema.graphql',
@@ -14,7 +16,9 @@ const server = new GraphQLServer({
       pubsub,
       prisma,
       socketIO,
-      request
+      redisClient,
+      request,
+      chunkDistro
     }
   }
 })

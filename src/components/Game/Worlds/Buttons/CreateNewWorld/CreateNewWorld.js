@@ -127,8 +127,7 @@ const CreateNewWorld = withRouter(({ history }) => {
                         setGamemode((gamemode + 1) % gamemodes.length)
                       }}
                     >
-                      Game Mode:
-                      {gamemodeDictionary[gamemodes[gamemode]].title}
+                      Game Mode: {gamemodeDictionary[gamemodes[gamemode]].title}
                     </button>
                     <p>{gamemodeDictionary[gamemodes[gamemode]].description}</p>
                   </div>
