@@ -1,5 +1,7 @@
 import Helpers from '../../utils/helpers'
 
+import LZString from 'lz-string'
+
 const WorldQueries = {
   myWorlds(parent, args, { prisma, request }, info) {
     const userId = Helpers.getUserId(request)
@@ -25,16 +27,21 @@ const WorldQueries = {
     },
     { redisClient }
   ) {
-    const redisRepData = Helpers.getRedisRep(worldId, x, y, z, 'data')
-    const redisRepMesh = Helpers.getRedisRep(worldId, x, y, z, 'mesh')
+    const redisRepData = Helpers.getRedisRep(x, y, z, 'data')
+    const redisRepMesh = Helpers.getRedisRep(x, y, z, 'mesh')
     const chunkData = await redisClient.hgetAsync(worldId, redisRepData)
     const chunkMesh = await redisClient.hgetAsync(worldId, redisRepMesh)
     const parsedData = JSON.parse(chunkData)
     const parsedMesh = JSON.parse(chunkMesh)
-    return JSON.stringify({
-      data: parsedData,
-      meshData: parsedMesh
-    })
+
+    if (!parsedData || !parsedMesh) return ''
+
+    return LZString.compress(
+      JSON.stringify({
+        data: parsedData,
+        meshData: parsedMesh
+      })
+    )
   }
 }
 

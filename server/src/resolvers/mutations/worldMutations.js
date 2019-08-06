@@ -2,9 +2,6 @@ import Helpers from '../../utils/helpers'
 import commands from '../../lib/game/commands'
 import { ClassicGenerator } from '../../lib/generation/terrain'
 
-// eslint-disable-next-line import/no-unresolved
-import { Worker } from 'worker_threads'
-
 const DEFAULT_MESSAGE = 'Unknown command. Try /help for a list of commands.'
 
 const chunkCache = {}
@@ -109,9 +106,9 @@ const WorldMutations = {
   },
   async deleteWorld(parent, { worldId }, { prisma, redisClient }) {
     await prisma.mutation.deleteWorld({ where: { id: worldId } })
-    await redisClient.delAsync(worldId, function(err) {
-      if (!err) Helpers.log('redis', `Removed chunk info on world ${worldId}.`)
-    })
+    await redisClient
+      .delAsync(worldId)
+      .then(() => Helpers.log('redis', `Removed data of world ${worldId}`))
     return true
   },
   async runCommand(
@@ -221,7 +218,7 @@ const WorldMutations = {
     {
       data: { worldId, username, chunks, seed }
     },
-    { socketIO, redisClient, chunkDistro }
+    { socketIO, redisClient, chunkDistro, chunkLogger, workerPool }
   ) {
     // PROCESS ARGS
     const chunkList = chunks.map(chunk => Helpers.get3DCoordsFromRep(chunk))
@@ -229,8 +226,8 @@ const WorldMutations = {
     // CHECK REDIS
     await Promise.all(
       chunkList.map(async ({ x, y, z }) => {
-        const redisRepData = Helpers.getRedisRep(worldId, x, y, z, 'data')
-        const redisRepMesh = Helpers.getRedisRep(worldId, x, y, z, 'mesh')
+        const redisRepData = Helpers.getRedisRep(x, y, z, 'data')
+        const redisRepMesh = Helpers.getRedisRep(x, y, z, 'mesh')
         const chunkData = await redisClient.hgetAsync(worldId, redisRepData)
         const chunkMesh = await redisClient.hgetAsync(worldId, redisRepMesh)
 
@@ -257,37 +254,32 @@ const WorldMutations = {
           emitChunk()
         } else {
           // WORKER START WORKING
-          const worker = new Worker(
-            './server/src/modules/worker/world.worker.js'
+          workerPool.acquire(
+            './server/src/modules/worker/world.worker.js',
+            function(err, worker) {
+              if (err) throw err
+
+              worker.on('message', async ({ data, meshData }) => {
+                const jsonVoxelData = JSON.stringify(Array.from(data))
+                const jsonMeshData = JSON.stringify(meshData)
+
+                redisClient.hmset(
+                  worldId,
+                  redisRepData,
+                  jsonVoxelData,
+                  redisRepMesh,
+                  jsonMeshData,
+                  function(e) {
+                    if (!e) chunkLogger.addChunk()
+                  }
+                )
+
+                emitChunk()
+              })
+
+              worker.postMessage({ seed, x, y, z })
+            }
           )
-
-          worker.on('message', async ({ data, meshData }) => {
-            const jsonVoxelData = JSON.stringify(data)
-            const jsonMeshData = JSON.stringify(meshData)
-
-            redisClient.hmset(
-              worldId,
-              redisRepData,
-              jsonVoxelData,
-              redisRepMesh,
-              jsonMeshData,
-              function(err) {
-                if (!err)
-                  Helpers.log(
-                    'redis',
-                    `Saved chunk data of ${Helpers.get3DCoordsRep(
-                      x,
-                      y,
-                      z
-                    )} of worldId ${worldId} to cache.`
-                  )
-              }
-            )
-
-            emitChunk()
-          })
-
-          worker.postMessage({ seed, x, y, z })
         }
       })
     )

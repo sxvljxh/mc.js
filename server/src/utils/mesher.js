@@ -30,7 +30,7 @@ class Mesher {
   static generateMeshData = (planes, geoManager) => {
     if (!planes || planes.length === 0) return null
 
-    const materials = []
+    let materials = ''
     const mergedGeometry = new Geometry()
     const matrix = new Matrix4()
 
@@ -56,7 +56,7 @@ class Mesher {
       matrix.makeTranslation(wx, wy, wz)
       mergedGeometry.merge(geometry, matrix, i)
 
-      materials.push([type, geo, face])
+      materials += Helpers.getMaterialRep(type, geo, face)
     }
 
     const finalGeometry = new BufferGeometry().fromGeometry(mergedGeometry)

@@ -1,13 +1,11 @@
-import Helpers from '../../utils/helpers'
-
-function ChunkDistributor() {
+function ChunkDistributor(logger) {
   this.funcs = []
 
   setInterval(() => {
     if (this.funcs.length) {
       const func = this.funcs.shift()
       func()
-      Helpers.log('server', 'Distributed one chunk.')
+      logger.addDistro()
     }
   }, 50)
 }

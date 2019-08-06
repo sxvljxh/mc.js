@@ -7,6 +7,13 @@ const Config = {
     maxWorkerCount: 4,
     socketEndpoint: 'localhost:5000'
   },
+  server: {
+    chunk: {
+      logger: {
+        interval: 1500
+      }
+    }
+  },
   lights: {
     sunlight: {
       maxIntensity: 1.25,

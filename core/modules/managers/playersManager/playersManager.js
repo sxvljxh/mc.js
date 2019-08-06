@@ -6,6 +6,7 @@ function PlayersManager(scene) {
   const players = {}
 
   this.getPlayers = () => players
+  this.getPlayerCount = () => Object.keys(players).length
   this.getScene = () => scene
 }
 

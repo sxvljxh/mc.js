@@ -12,8 +12,22 @@ const HORZ_D = Config.player.render.horzD
 const VERT_D = Config.player.render.vertD
 
 const parser = workerize(`
+  importScripts('https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js')
+
+  function parseMaterial(mat) {
+    const split = mat.split(':')
+    split[0] = parseInt(split[0])
+    return split
+  }
+
   export function parse(data) {
-    const parsed = JSON.parse(data)
+    const decompressed = LZString.decompress(data)
+    const parsed = JSON.parse(decompressed)
+
+    parsed.meshData[1] = parsed.meshData[1].split(';')
+    parsed.meshData[1].pop()
+    parsed.meshData[1] = parsed.meshData[1].map(parseMaterial)
+
     return parsed
   }
 `)
@@ -110,16 +124,20 @@ class ChunkManager {
   }
 
   handleNewChunk = async (cx, cy, cz, ioData) => {
-    if (!ioData) return
-
     const rep = Helpers.get3DCoordsRep(cx, cy, cz)
+    // This means chunk ain't new
     if (this.getChunkFromCoords(cx, cy, cz)) return
 
-    const { data, meshData } = await parser.parse(ioData.getChunk)
-
     const newChunk = new Chunk(cx, cy, cz)
-    newChunk.setData(data)
 
+    if (!ioData) {
+      this.chunks[rep] = newChunk
+      return
+    }
+
+    const { data, meshData } = await parser.parse(ioData)
+
+    newChunk.setData(data)
     this.meshChunk(newChunk, meshData)
 
     this.chunks[rep] = newChunk
@@ -184,7 +202,7 @@ class ChunkManager {
     const { x: bx, y: by, z: bz } = Helpers.globalBlockToChunkBlock({ x, y, z })
     const chunk = this.getChunkFromCoords(coordx, coordy, coordz)
 
-    if (!chunk || !chunk.getData()) return undefined
+    if (!chunk || !chunk.getDataExists()) return undefined
 
     return chunk.getBlock(bx, by, bz)
   }

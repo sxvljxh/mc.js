@@ -124,8 +124,8 @@ class World extends Stateful {
               z: coordz
             }
           })
-          .then(({ data }) => {
-            this.chunkManager.handleNewChunk(coordx, coordy, coordz, data)
+          .then(({ data: { getChunk } }) => {
+            this.chunkManager.handleNewChunk(coordx, coordy, coordz, getChunk)
           })
       }
     )
@@ -204,6 +204,7 @@ class World extends Stateful {
     const isSolid = forPassing
       ? Helpers.isPassable(type)
       : Helpers.isLiquid(type)
+
     return !isSolid
   }
 

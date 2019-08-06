@@ -2,11 +2,15 @@ import { resolvers } from './resolvers'
 import { prisma, socketIO, redisClient } from './modules/server'
 import Helpers from './utils/helpers'
 import ChunkDistributor from './lib/game/chunkDistributor'
+import ChunkLogger from './lib/game/chunkLogger'
 
+import Pool from 'worker-threads-pool'
 import { GraphQLServer, PubSub } from 'graphql-yoga'
 
 const pubsub = new PubSub()
-const chunkDistro = new ChunkDistributor()
+const chunkLogger = new ChunkLogger()
+const chunkDistro = new ChunkDistributor(chunkLogger)
+const workerPool = new Pool({ max: 10 })
 
 const server = new GraphQLServer({
   typeDefs: 'server/src/schema.graphql',
@@ -18,7 +22,9 @@ const server = new GraphQLServer({
       socketIO,
       redisClient,
       request,
-      chunkDistro
+      chunkDistro,
+      chunkLogger,
+      workerPool
     }
   }
 })

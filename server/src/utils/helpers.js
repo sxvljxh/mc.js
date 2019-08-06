@@ -51,8 +51,8 @@ class Helpers {
   static getWorldChunkRep = (worldId, cx, cy, cz) =>
     `${worldId}::${Helpers.get3DCoordsRep(cx, cy, cz)}`
 
-  static getRedisRep = (worldId, coordx, coordy, coordz, key) =>
-    `${Helpers.getWorldChunkRep(worldId, coordx, coordy, coordz)}::${key}`
+  static getRedisRep = (coordx, coordy, coordz, key) =>
+    `${Helpers.get3DCoordsRep(coordx, coordy, coordz)}::${key}`
 
   static getIORep = (worldId, username, key) =>
     `${worldId}::${username}::${key}`
@@ -72,6 +72,8 @@ class Helpers {
     const [x, y, z] = rep.split(':')
     return { x: parseInt(x, 10), y: parseInt(y, 10), z: parseInt(z, 10) }
   }
+
+  static getMaterialRep = (type, geo, face) => `${type}:${geo}:${face};`
 
   static getRelativeCoords = (x, y, z, offsets) => ({
     x: x - offsets[0],

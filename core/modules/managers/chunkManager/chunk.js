@@ -7,12 +7,19 @@ import * as THREE from 'three'
 const SIZE = Config.chunk.size
 const NEIGHBOR_WIDTH = Config.chunk.neighborWidth
 
+const defaultData = ndarray(new Uint8Array((SIZE + NEIGHBOR_WIDTH) ** 3), [
+  SIZE + NEIGHBOR_WIDTH,
+  SIZE + NEIGHBOR_WIDTH,
+  SIZE + NEIGHBOR_WIDTH
+])
+
 function Chunk(x, y, z) {
   let mesh = null
   let cbs = {}
   let loading = true
   let isInScene = false
-  let data = null
+  let data = defaultData
+  let dataExists = false
 
   const rep = Helpers.get3DCoordsRep(x, y, z)
 
@@ -22,6 +29,7 @@ function Chunk(x, y, z) {
       SIZE + NEIGHBOR_WIDTH * 2,
       SIZE + NEIGHBOR_WIDTH * 2
     ])
+    dataExists = true
   }
   this.setMesh = m => {
     if (!m || !(m instanceof THREE.Object3D)) return
@@ -39,6 +47,7 @@ function Chunk(x, y, z) {
   this.setIsInScene = bool => (isInScene = bool)
 
   this.getData = () => data
+  this.getDataExists = () => dataExists
   this.getRep = () => rep
   this.getMesh = () => mesh
   this.getLoading = () => loading
