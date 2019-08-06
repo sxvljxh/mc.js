@@ -1,3 +1,7 @@
+import Config from '../../../../config/config'
+
+const DISTRO_INTERVAL = Config.server.chunk.distro.interval
+
 function ChunkDistributor(logger) {
   this.funcs = []
 
@@ -7,7 +11,7 @@ function ChunkDistributor(logger) {
       func()
       logger.addDistro()
     }
-  }, 50)
+  }, DISTRO_INTERVAL)
 }
 
 ChunkDistributor.prototype.append = function(func) {

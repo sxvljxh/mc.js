@@ -6,9 +6,14 @@ export default class Renderer {
     // Properties
     this.scene = scene
     this.canvas = canvas
+    const context = canvas.getContext('webgl2')
 
     // Create WebGL renderer and set its antialias
-    this.threeRenderer = new THREE.WebGLRenderer({ antialias: false, canvas: this.canvas })
+    this.threeRenderer = new THREE.WebGLRenderer({
+      antialias: false,
+      canvas: this.canvas,
+      context
+    })
 
     // Set clear color to fog to enable fog or to hex color for no fog
     this.threeRenderer.setClearColor(scene.fog.color)
@@ -26,7 +31,11 @@ export default class Renderer {
   }
 
   updateSize() {
-    this.threeRenderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight, false)
+    this.threeRenderer.setSize(
+      this.canvas.clientWidth,
+      this.canvas.clientHeight,
+      false
+    )
   }
 
   render(scene, camera) {

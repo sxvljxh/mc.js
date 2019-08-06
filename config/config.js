@@ -11,6 +11,9 @@ const Config = {
     chunk: {
       logger: {
         interval: 1500
+      },
+      distro: {
+        interval: 5
       }
     }
   },
@@ -143,7 +146,7 @@ const Config = {
     liquid: [0, 9]
   },
   chunk: {
-    size: 16,
+    size: 10,
     neighborWidth: 3,
     height: 256
   },
