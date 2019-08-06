@@ -1,10 +1,10 @@
 import Helpers from '../../../utils/helpers'
-import Config from '../../../config/config'
 
 import Mesher from './mesher'
 import Chunk from './chunk'
 import ChunkGenWorker from './chunkGen.worker'
 
+import Config from 'mcjs-config/config'
 import * as THREE from 'three'
 import workerize from 'workerize'
 

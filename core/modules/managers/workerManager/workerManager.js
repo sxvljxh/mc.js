@@ -1,7 +1,7 @@
-import Config from '../../../config/config'
-
 import WorkerPool from './workerPool'
 import TaskQueue from './taskQueue'
+
+import Config from 'mcjs-config/config'
 
 // import * as THREE from 'three'
 

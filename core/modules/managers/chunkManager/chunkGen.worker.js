@@ -1,10 +1,10 @@
 import { ClassicGenerator } from '../../../lib/generation/terrain'
 import GeometryManager from '../resourceManager/geometryManager'
 import LightingManager from '../lightingManager/lightingManager'
-import Config from '../../../config/config'
 
 import Mesher from './mesher'
 
+import Config from 'mcjs-config/config'
 import ndarray from 'ndarray'
 
 const SIZE = Config.chunk.size

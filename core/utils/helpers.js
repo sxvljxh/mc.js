@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
 
-import Config from '../config/config'
+import Config from 'mcjs-config/config'
 
 const SIZE = Config.chunk.size
 const NEIGHBOR_WIDTH = Config.chunk.neighborWidth

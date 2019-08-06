@@ -1,10 +1,10 @@
 /**
  * Central control of player state
  */
-import Config from '../../../../config/config'
 import Stateful from '../../../../lib/stateful/stateful'
 import Helpers from '../../../../utils/helpers'
 
+import Config from 'mcjs-config/config'
 import TWEEN from '@tweenjs/tween.js'
 
 const SPRINT_FOV_DELTA = Config.camera.sprintFovDelta

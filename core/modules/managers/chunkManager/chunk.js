@@ -1,6 +1,6 @@
 import Helpers from '../../../utils/helpers'
-import Config from '../../../config/config'
 
+import Config from 'mcjs-config/config'
 import ndarray from 'ndarray'
 import * as THREE from 'three'
 
@@ -46,7 +46,11 @@ function Chunk(x, y, z) {
   this.getBlock = (bx, by, bz) => {
     try {
       return data
-        ? data.get(bx + NEIGHBOR_WIDTH, bz + NEIGHBOR_WIDTH, by + NEIGHBOR_WIDTH)
+        ? data.get(
+            bx + NEIGHBOR_WIDTH,
+            bz + NEIGHBOR_WIDTH,
+            by + NEIGHBOR_WIDTH
+          )
         : undefined
     } catch (e) {
       return 0

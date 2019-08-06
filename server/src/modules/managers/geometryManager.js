@@ -1,5 +1,5 @@
 const Resources = require('../../config/resources')
-const Config = require('../../config/config')
+const Config = require('../../../../config/config')
 
 const { PlaneGeometry, Color } = require('three')
 

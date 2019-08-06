@@ -18,8 +18,13 @@ module.exports = override(
     return config
   })(),
   removeModuleScopePlugin(),
-  babelInclude([path.resolve(__dirname, 'src'), path.resolve(__dirname, 'core')]),
+  babelInclude([
+    path.resolve(__dirname, 'src'),
+    path.resolve(__dirname, 'core'),
+    path.resolve(__dirname, 'config')
+  ]),
   addWebpackAlias({
-    ['core']: path.resolve(__dirname, 'core')
+    ['core']: path.resolve(__dirname, 'core'),
+    ['mcjs-config']: path.resolve(__dirname, 'config')
   })
 )

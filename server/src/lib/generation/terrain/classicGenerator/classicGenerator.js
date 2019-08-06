@@ -1,6 +1,6 @@
 const Helpers = require('../../../../utils/helpers')
 const Structures = require('../../../../config/structures')
-const Config = require('../../../../config/config')
+const Config = require('../../../../../../config/config')
 const { Perlin, Simplex } = require('../../utils')
 
 const { Noise } = require('noisejs')

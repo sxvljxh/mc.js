@@ -1,5 +1,5 @@
 const { ClassicGenerator } = require('../../lib/generation/terrain')
-const Config = require('../../config/config')
+const Config = require('../../../../config/config')
 const Mesher = require('../../utils/mesher')
 const { LightingManager, GeometryManager } = require('../managers')
 

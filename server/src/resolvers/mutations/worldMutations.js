@@ -109,7 +109,9 @@ const WorldMutations = {
   },
   async deleteWorld(parent, { worldId }, { prisma, redisClient }) {
     await prisma.mutation.deleteWorld({ where: { id: worldId } })
-    await redisClient.delAsync(worldId)
+    await redisClient.delAsync(worldId, function(err) {
+      if (!err) Helpers.log('redis', `Removed chunk info on world ${worldId}.`)
+    })
     return true
   },
   async runCommand(

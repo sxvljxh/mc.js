@@ -1,5 +1,5 @@
 const Helpers = require('../../utils/helpers')
-const Config = require('../../config/config')
+const Config = require('../../../../config/config')
 
 const SIZE = Config.chunk.size
 const NEIGHBOR_WIDTH = Config.chunk.neighborWidth

@@ -1,7 +1,7 @@
 import Helpers from '../../../../utils/helpers'
 import Structures from '../../../../config/structures'
-import Config from '../../../../config/config'
 
+import Config from 'mcjs-config/config'
 import { Noise } from 'noisejs'
 import tooloud from 'tooloud'
 
@@ -84,7 +84,9 @@ export default function ClassicGenerator(seed) {
 
   const isSolidAt = (x, y, z) => {
     // TODO: Check cache first
-    return getNoise((x * scale) / 100, (y * scale) / 100, (z * scale) / 100) >= -0.2
+    return (
+      getNoise((x * scale) / 100, (y * scale) / 100, (z * scale) / 100) >= -0.2
+    )
   }
 
   const isSolidAtWithCB = (x, y, z) => {
@@ -129,7 +131,8 @@ export default function ClassicGenerator(seed) {
   /*                              MEMBER FUNCTIONS                              */
   /* -------------------------------------------------------------------------- */
 
-  this.getGrassData = (x, z) => this.grasses[Helpers.get2DCoordsRep(x, z)] || null
+  this.getGrassData = (x, z) =>
+    this.grasses[Helpers.get2DCoordsRep(x, z)] || null
 
   this.getNaiveHighestBlock = (x, z) => {
     let height = 0
@@ -180,8 +183,11 @@ export default function ClassicGenerator(seed) {
 
     for (let i = 0; i < octaves; i++) {
       total +=
-        this.noise.perlin3(x * frequency * scale, y * frequency * scale, z * frequency * scale) *
-        amplitude
+        this.noise.perlin3(
+          x * frequency * scale,
+          y * frequency * scale,
+          z * frequency * scale
+        ) * amplitude
 
       maxVal += amplitude
 
@@ -234,24 +240,51 @@ export default function ClassicGenerator(seed) {
 
     // ACTUAL
     for (let x = offsets[0]; x < offsets[0] + SIZE + NEIGHBOR_WIDTH * 2; x++)
-      for (let z = offsets[2]; z < offsets[2] + SIZE + NEIGHBOR_WIDTH * 2; z++) {
+      for (
+        let z = offsets[2];
+        z < offsets[2] + SIZE + NEIGHBOR_WIDTH * 2;
+        z++
+      ) {
         const maxHeight = this.getHighestBlock(x, z)
-        for (let y = offsets[1]; y < offsets[1] + SIZE + NEIGHBOR_WIDTH * 2; y++) {
+        for (
+          let y = offsets[1];
+          y < offsets[1] + SIZE + NEIGHBOR_WIDTH * 2;
+          y++
+        ) {
           const blockType = this.getBlockInfo(x, y, z, maxHeight)
           const mappedCoords = Helpers.getRelativeCoords(x, y, z, offsets)
 
-          voxelData.set(mappedCoords.x, mappedCoords.z, mappedCoords.y, blockType)
+          voxelData.set(
+            mappedCoords.x,
+            mappedCoords.z,
+            mappedCoords.y,
+            blockType
+          )
         }
       }
 
     // TREES
     for (let x = offsets[0]; x < offsets[0] + SIZE + NEIGHBOR_WIDTH * 2; x++)
-      for (let z = offsets[2]; z < offsets[2] + SIZE + NEIGHBOR_WIDTH * 2; z++) {
+      for (
+        let z = offsets[2];
+        z < offsets[2] + SIZE + NEIGHBOR_WIDTH * 2;
+        z++
+      ) {
         const maxHeight = this.getHighestBlock(x, z)
 
-        const type = Helpers.getLoadedBlocks(x, maxHeight, z, voxelData, this, offsets)
+        const type = Helpers.getLoadedBlocks(
+          x,
+          maxHeight,
+          z,
+          voxelData,
+          this,
+          offsets
+        )
 
-        if ((type === 2 || type === 3) && this.getBlockInfo(x, maxHeight + 1, z, maxHeight) === 0) {
+        if (
+          (type === 2 || type === 3) &&
+          this.getBlockInfo(x, maxHeight + 1, z, maxHeight) === 0
+        ) {
           if (shouldPlantTree(x, z, treeMin, treeScale)) {
             const { data } = STRUCTURES.BaseTree
 
@@ -264,9 +297,27 @@ export default function ClassicGenerator(seed) {
                 offsets
               )
 
-              if (Helpers.checkWithinChunk(mappedCoords.x, mappedCoords.y, mappedCoords.z))
-                if (override || voxelData.get(mappedCoords.x, mappedCoords.z, mappedCoords.y) === 0)
-                  voxelData.set(mappedCoords.x, mappedCoords.z, mappedCoords.y, treeB)
+              if (
+                Helpers.checkWithinChunk(
+                  mappedCoords.x,
+                  mappedCoords.y,
+                  mappedCoords.z
+                )
+              )
+                if (
+                  override ||
+                  voxelData.get(
+                    mappedCoords.x,
+                    mappedCoords.z,
+                    mappedCoords.y
+                  ) === 0
+                )
+                  voxelData.set(
+                    mappedCoords.x,
+                    mappedCoords.z,
+                    mappedCoords.y,
+                    treeB
+                  )
             }
           } else if (shouldPlantGrass(x, z, grassMin, grassScale)) {
             const grassPos = { x, y: maxHeight + 1, z }
@@ -277,7 +328,13 @@ export default function ClassicGenerator(seed) {
               offsets
             )
 
-            if (Helpers.checkWithinChunk(mappedCoords.x, mappedCoords.y, mappedCoords.z))
+            if (
+              Helpers.checkWithinChunk(
+                mappedCoords.x,
+                mappedCoords.y,
+                mappedCoords.z
+              )
+            )
               voxelData.set(mappedCoords.x, mappedCoords.z, mappedCoords.y, 31)
           }
         }

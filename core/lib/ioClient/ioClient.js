@@ -1,5 +1,4 @@
-import Config from '../../config/config'
-
+import Config from 'mcjs-config/config'
 import socketIOClient from 'socket.io-client'
 
 const SOCKET_ENDPOINT = Config.tech.socketEndpoint

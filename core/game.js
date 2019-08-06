@@ -1,8 +1,8 @@
-import Config from './config/config'
 import { Renderer, Camera, World, Player } from './modules/app'
 import { Debug, ConnectionStatus } from './modules/interfaces'
 import IOClient from './lib/ioClient/ioClient'
 
+import Config from 'mcjs-config/config'
 import * as THREE from 'three'
 
 import './utils/setup'

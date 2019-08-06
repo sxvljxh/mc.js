@@ -1,6 +1,5 @@
 import Stateful from '../../../lib/stateful/stateful'
 import Helpers from '../../../utils/helpers'
-import Config from '../../../config/config'
 import {
   UPDATE_PLAYER_MUTATION,
   PLAYER_SUBSCRIPTION,
@@ -10,6 +9,8 @@ import {
 import Status from './status/status'
 import PlayerControls from './controls/controls'
 import PlayerViewport from './viewport/viewport'
+
+import Config from 'mcjs-config/config'
 
 const P_I_2_TOE = Config.player.aabb.eye2toe
 const HORZ_D = Config.player.render.horzD

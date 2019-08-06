@@ -1,6 +1,6 @@
 import Resources from '../../../config/resources'
-import Config from '../../../config/config'
 
+import Config from 'mcjs-config/config'
 import * as THREE from 'three'
 
 const DIMENSION = Config.block.dimension
@@ -32,7 +32,8 @@ class GeometryManager {
       }
       if (func) {
         if (Array.isArray(func)) {
-          for (let i = 0; i < func.length; i++) this.geometries[key].geometry[func[i]](rotation[i])
+          for (let i = 0; i < func.length; i++)
+            this.geometries[key].geometry[func[i]](rotation[i])
         } else this.geometries[key].geometry[func](rotation)
       }
 
@@ -59,7 +60,9 @@ class GeometryManager {
     const shadow =
       diff >= LOWEST_LIGHT
         ? new THREE.Color(`rgb(${diff},${diff},${diff})`)
-        : new THREE.Color(`rgb(${LOWEST_LIGHT},${LOWEST_LIGHT},${LOWEST_LIGHT})`)
+        : new THREE.Color(
+            `rgb(${LOWEST_LIGHT},${LOWEST_LIGHT},${LOWEST_LIGHT})`
+          )
 
     const geoData = this.geometries[key]
 
@@ -71,7 +74,11 @@ class GeometryManager {
         const colors = new Array(3)
         for (let c = 0; c < 3; c++) {
           colors[c] =
-            smoothLighting[f][c] === 1 ? shadow : smoothLighting[f][c] === 2 ? light : shadow
+            smoothLighting[f][c] === 1
+              ? shadow
+              : smoothLighting[f][c] === 2
+              ? light
+              : shadow
         }
         geoData.geometry.faces[f].vertexColors = colors
       }

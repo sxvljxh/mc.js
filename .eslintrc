@@ -11,7 +11,10 @@
     "jest": true
   },
   "rules": {
-    "import/order": [2, { "groups": ["parent", "sibling"], "newlines-between": "always" }],
+    "import/order": [
+      2,
+      { "groups": ["parent", "sibling"], "newlines-between": "always" }
+    ],
     "prefer-promise-reject-errors": "off",
     "react/jsx-filename-extension": "off",
     "react/forbid-prop-types": "off",
@@ -30,7 +33,7 @@
   },
   "settings": {
     "import/resolver": {
-      "alias": [["core", "./core"]]
+      "alias": [["core", "./core"], ["mcjs-config", "./config"]]
     }
   }
 }

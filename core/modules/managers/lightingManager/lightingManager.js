@@ -1,5 +1,6 @@
 import Helpers from '../../../utils/helpers'
-import Config from '../../../config/config'
+
+import Config from 'mcjs-config/config'
 
 const SIZE = Config.chunk.size
 const NEIGHBOR_WIDTH = Config.chunk.neighborWidth
@@ -37,7 +38,9 @@ class LightingManager {
         offsets
       )
       if (Helpers.isTransparent(value)) {
-        const pastNodeCoords = new Set([Helpers.get3DCoordsRep(block.x, -1, block.z)])
+        const pastNodeCoords = new Set([
+          Helpers.get3DCoordsRep(block.x, -1, block.z)
+        ])
         const queue = [block]
 
         while (queue.length > 0) {
@@ -54,7 +57,9 @@ class LightingManager {
               lightLevel: q.lightLevel - 1
             }
             if (
-              pastNodeCoords.has(Helpers.get3DCoordsRep(newNode.x, newNode.y, newNode.z)) ||
+              pastNodeCoords.has(
+                Helpers.get3DCoordsRep(newNode.x, newNode.y, newNode.z)
+              ) ||
               newNode.lightLevel < 0
             )
               continue
@@ -72,7 +77,10 @@ class LightingManager {
               offsets
             )
 
-            while (Helpers.isTransparent(startValue) && !Helpers.isTransparent(endValue)) {
+            while (
+              Helpers.isTransparent(startValue) &&
+              !Helpers.isTransparent(endValue)
+            ) {
               yValue += 1
               startValue = Helpers.getLoadedBlocks(
                 q.x,
@@ -92,7 +100,11 @@ class LightingManager {
               )
             }
 
-            if (!Helpers.isTransparent(startValue) || !Helpers.isTransparent(endValue)) continue
+            if (
+              !Helpers.isTransparent(startValue) ||
+              !Helpers.isTransparent(endValue)
+            )
+              continue
 
             newNode.y = yValue
 
@@ -492,7 +504,14 @@ class LightingManager {
     return output
   }
 
-  setLightingData = (lightingData, smoothLightingData, voxelData, coordx, coordy, coordz) => {
+  setLightingData = (
+    lightingData,
+    smoothLightingData,
+    voxelData,
+    coordx,
+    coordy,
+    coordz
+  ) => {
     if (!voxelData.data.find(ele => ele)) return
 
     const offsets = [
@@ -511,7 +530,13 @@ class LightingManager {
             const tempy = tempCoords.y
             const tempz = tempCoords.z
 
-            const lighting = this.getBlockLighting(tempx, tempy, tempz, voxelData, offsets)
+            const lighting = this.getBlockLighting(
+              tempx,
+              tempy,
+              tempz,
+              voxelData,
+              offsets
+            )
             for (let l = 0; l < 6; l++) {
               lightingData.set(
                 x - NEIGHBOR_WIDTH,
@@ -522,7 +547,12 @@ class LightingManager {
               )
             }
 
-            const smoothLighting = this.getBlockSmoothLighting(x, y, z, voxelData)
+            const smoothLighting = this.getBlockSmoothLighting(
+              x,
+              y,
+              z,
+              voxelData
+            )
             for (let l = 0; l < 6; l++) {
               if (smoothLighting[l]) {
                 for (let m = 0; m < 3; m++)

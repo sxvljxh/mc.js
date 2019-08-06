@@ -1,12 +1,12 @@
 /* -------------------------------------------------------------------------- */
 /*               PORTED FROM: https://github.com/shama/voxel-sky               */
 /* -------------------------------------------------------------------------- */
-import Config from '../../../../config/config'
 
 import sun from './sun'
 import moon from './moon'
 import stars from './stars'
 
+import Config from 'mcjs-config/config'
 import * as THREE from 'three'
 import ticModule from 'tic'
 import util from 'util'
@@ -64,7 +64,10 @@ Sky.prototype.createBox = function() {
     side: THREE.BackSide,
     fog: false
   })
-  this.outer = new THREE.Mesh(new THREE.BoxBufferGeometry(WORLD_SIZE, WORLD_SIZE, WORLD_SIZE), mat)
+  this.outer = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(WORLD_SIZE, WORLD_SIZE, WORLD_SIZE),
+    mat
+  )
   sceneRef.add(this.outer)
   this.outer.name = 'outer-sky'
 
@@ -75,7 +78,11 @@ Sky.prototype.createBox = function() {
   const materials = []
   for (let i = 0; i < 6; i++) materials.push(this.createCanvas())
   this.inner = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(WORLD_SIZE - 10, WORLD_SIZE - 10, WORLD_SIZE - 10),
+    new THREE.BoxBufferGeometry(
+      WORLD_SIZE - 10,
+      WORLD_SIZE - 10,
+      WORLD_SIZE - 10
+    ),
     materials
   )
   sceneRef.add(this.inner)
@@ -137,7 +144,8 @@ Sky.prototype.colorFunc = function(end, time) {
     this.outer.material.color.setHSL(color.h, color.s, color.l)
     this.getScene().background.setHSL(color.h, color.s, color.l)
     // this.sunlight.color.setHSL(color.h, color.s, color.l)
-    if (this.getScene().fog) this.getScene().fog.color.setHSL(color.h, color.s, color.l)
+    if (this.getScene().fog)
+      this.getScene().fog.color.setHSL(color.h, color.s, color.l)
     if (dt >= 1) this.colorInterval()
     i += this.speed
   }, this.speed)
@@ -238,7 +246,11 @@ Sky.prototype.fn = function(time, fastForward) {
   // change moon phase
   if (time === 1200) {
     this.paint('top', this.clear)
-    this.paint('top', this.moon, Math.floor(my.day % my.moonCycle) / my.moonCycle)
+    this.paint(
+      'top',
+      this.moon,
+      Math.floor(my.day % my.moonCycle) / my.moonCycle
+    )
     this.paint('top', this.stars, 500)
   }
 

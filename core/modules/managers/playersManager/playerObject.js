@@ -1,9 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import Helpers from '../../../utils/helpers'
-import Config from '../../../config/config'
 
 import { loadSkinToCanvas, isSlimSkin } from './playerObjectUtils'
 
+import Config from 'mcjs-config/config'
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
 

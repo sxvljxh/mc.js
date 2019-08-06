@@ -1,4 +1,4 @@
-import Config from '../../../config/config'
+import Config from 'mcjs-config/config'
 
 function WorkerPool(Worker, callback, config) {
   const gFrees = []
@@ -11,7 +11,8 @@ function WorkerPool(Worker, callback, config) {
   const specializedWorkers = []
 
   // TODO: Figure out what's wrong with this
-  const maxGWorkers = navigator.hardwareConcurrency || Config.world.maxWorkerCount
+  const maxGWorkers =
+    navigator.hardwareConcurrency || Config.world.maxWorkerCount
   const maxSWorkers = 2
 
   function nextGJob(index) {

@@ -1,5 +1,4 @@
-import Config from '../../../config/config'
-
+import Config from 'mcjs-config/config'
 import * as THREE from 'three'
 
 const CAMERA_CONFIG = Config.camera
@@ -22,7 +21,11 @@ export default class Camera {
       CAMERA_CONFIG.near,
       D * SIZE * DIMENSION * 2.5
     )
-    this.threeCamera.position.set(CAMERA_CONFIG.posX, CAMERA_CONFIG.posY, CAMERA_CONFIG.posZ)
+    this.threeCamera.position.set(
+      CAMERA_CONFIG.posX,
+      CAMERA_CONFIG.posY,
+      CAMERA_CONFIG.posZ
+    )
 
     // Initial sizing
     this.updateSize(renderer)
@@ -30,7 +33,8 @@ export default class Camera {
 
   updateSize(renderer) {
     // Update camera aspect ratio with window aspect ratio
-    this.threeCamera.aspect = renderer.domElement.width / renderer.domElement.height
+    this.threeCamera.aspect =
+      renderer.domElement.width / renderer.domElement.height
 
     // Always call updateProjectionMatrix on camera change
     this.threeCamera.updateProjectionMatrix()
