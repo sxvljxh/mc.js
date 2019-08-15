@@ -6,7 +6,8 @@ import { BLOCKS } from './blockDict'
 const Config = {
   tech: {
     maxWorkerCount: 4,
-    socketEndpoint: `${self.location.hostname}:5000`
+    socketEndpoint: `${self.location.hostname}:5000`,
+    multiplayerEndpoint: `${self.location.hostname}:2567`
   },
   lights: {
     sunlight: {

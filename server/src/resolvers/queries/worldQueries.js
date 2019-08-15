@@ -23,6 +23,7 @@ const WorldQueries = {
       },
       where
     })
+
     return prisma.query.world({ where }, info)
   }
 }

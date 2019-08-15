@@ -99,11 +99,7 @@ class Game {
     /* -------------------------------------------------------------------------- */
     /*                                TEST STARTS HERE                               */
     /* -------------------------------------------------------------------------- */
-    // const geometry = new THREE.BoxGeometry(DIMENSION, DIMENSION, DIMENSION)
-    // // eslint-disable-next-line global-require
-    // const cube = new THREE.Mesh(geometry, this.resourceManager.getMaterial(18, 'top'))
-    // this.scene.add(cube)
-    // if (this.player.getCoordinates().y === Number.MIN_SAFE_INTEGER) this.player.setHeight(0)
+    // NO TESTS CURRENTLY
     /* -------------------------------------------------------------------------- */
     /*                               TEST ENDS HERE                               */
     /* -------------------------------------------------------------------------- */

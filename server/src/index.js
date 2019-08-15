@@ -1,15 +1,23 @@
 import { resolvers } from './resolvers'
 import { prisma, socketIO } from './lib/server'
 
-import debug from 'debug'
-import { GraphQLServer, PubSub } from 'graphql-yoga'
 import fs from 'fs'
+import debug from 'debug'
+import http from 'http'
+import { Server as ColyseusServer } from 'colyseus'
+import { GraphQLServer, PubSub } from 'graphql-yoga'
 import { fileLoader, mergeTypes } from 'merge-graphql-schemas'
 
+/* -------------------------------------------------------------------------- */
+/*                            CONSTANTS AND HELPERS                           */
+/* -------------------------------------------------------------------------- */
+const PORT = process.env.port | 4000
+const MULTIPLAYER_PORT = 2567
 const log = output => debug('server')(JSON.stringify(output, null, 2))
 
-const pubsub = new PubSub()
-
+/* -------------------------------------------------------------------------- */
+/*                               LOADING SCHEMA                               */
+/* -------------------------------------------------------------------------- */
 let baseSchema
 
 const schemaFile = `${__dirname}/generated/prisma.graphql`
@@ -21,8 +29,24 @@ if (fs.existsSync(schemaFile)) {
 const schema = fileLoader(`${__dirname}/schema/api/`, {
   recursive: true
 })
-
 const apiSchema = mergeTypes([baseSchema].concat(schema), { all: true })
+
+/* -------------------------------------------------------------------------- */
+/*                           CONTEXT INITIALIZATION                           */
+/* -------------------------------------------------------------------------- */
+const pubsub = new PubSub()
+
+/* -------------------------------------------------------------------------- */
+/*                               ACTUAL SERVERS                               */
+/* -------------------------------------------------------------------------- */
+
+const multiplayer = new ColyseusServer({
+  server: http.createServer(),
+  verifyClient(info, next) {
+    // TODO: Implement handshake verification
+    next(true)
+  }
+})
 
 const server = new GraphQLServer({
   // typeDefs: 'server/src/schema.graphql',
@@ -36,12 +60,15 @@ const server = new GraphQLServer({
       pubsub,
       prisma,
       socketIO,
-      request
+      request,
+      multiplayer
     }
   }
 })
 
-server.start({ port: process.env.PORT | 4000 }, ({ port }) => {
+multiplayer.listen(MULTIPLAYER_PORT)
+
+server.start({ port: PORT }, ({ port }) => {
   // eslint-disable-next-line no-console
-  log(`The server is up and running on port ${port}.`)
+  log('server', `The server is up and running on port ${port}.`)
 })
