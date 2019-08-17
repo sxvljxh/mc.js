@@ -104,13 +104,12 @@ class Player extends Stateful {
             ...playerDir
           }
         })
+        this.ioClient.emit('position', {
+          playerCoords,
+          playerDir
+        })
       }
-    }, 500)
-
-    this.posSocketUpdater = window.requestInterval(
-      () => this.ioClient.emit('position', this.getPosDirData()),
-      100
-    )
+    }, 100)
   }
 
   initSubscriptions = () => {
@@ -152,9 +151,8 @@ class Player extends Stateful {
   removeUpdaters = () => {
     window.clearRequestInterval(this.posUpdater)
 
-    if (this.posSocketUpdater) {
+    if (this.startPositionUpdater) {
       document.removeEventListener('multiplayer', this.startPositionUpdater)
-      window.clearRequestInterval(this.posSocketUpdater)
     }
   }
 
